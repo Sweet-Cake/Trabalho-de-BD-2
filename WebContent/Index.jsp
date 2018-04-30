@@ -25,10 +25,10 @@
 	<table class="blueTable"id="tabela">
 		<thead>
 		<tr>
-		<th>Código</th>
-		<th>Atleta</th>
-		<th>País</th>
-		<th>Resultado</th>
+		<th style="color:#000;">Código</th>
+		<th style="color:#000;">Atleta</th>
+		<th style="color:#000;">País</th>
+		<th style="color:#000;">Resultado</th>
 		</tr>
 		</thead>
 		<tbody>
