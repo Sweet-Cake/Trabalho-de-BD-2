@@ -24,7 +24,6 @@ tipo INT NOT NULL,
 PRIMARY KEY (cod)
 )
 
-
 CREATE TABLE prova_atleta(
 cod_prova INT NOT NULL,
 cod_atleta INT NOT NULL,
@@ -33,6 +32,51 @@ PRIMARY KEY(cod_prova, cod_atleta),
 FOREIGN KEY (cod_prova) REFERENCES prova(cod),
 FOREIGN KEY (cod_atleta) REFERENCES atleta(cod)
 )
+CREATE TABLE fase(
+	id INT NOT NULL,
+	nome VARCHAR(10),
+	PRIMARY KEY (id)
+)
+CREATE TABLE bateria(
+	id INT NOT NULL,
+	nome VARCHAR (10),
+	PRIMARY KEY (id)
+)
+INSERT INTO fase VALUES
+(1,'INICIAL'),
+(2,'FINAL')
+CREATE TABLE prova_corrida(
+	cod_prova INT,
+	cod_atleta INT,
+	cod_fase INT,
+	resultado DATETIME,
+	PRIMARY KEY(cod_prova, cod_atleta, cod_fase),
+	FOREIGN KEY (cod_prova) REFERENCES prova(cod),
+	FOREIGN KEY (cod_atleta) REFERENCES atleta(cod),
+	FOREIGN KEY (cod_fase) REFERENCES fase(id)
+)
+
+select *from prova_corrida
+INSERT INTO prova_corrida VALUES
+(2,2,2,'01:15:10:000'),
+(2,2,1,'01:15:10:000')
+
+select SUBSTRING(CONVERT(VARCHAR,resultado,114),1,12) as HORA FROM prova_corrida
+
+CREATE TABLE prova_cs(
+	cod_prova INT NOT NULL,
+	cod_atleta INT NOT NULL,
+	cod_fase INT NOT NULL,
+	cod_bateria INT NOT NULL,
+	resultado DECIMAl(7,2),
+	PRIMARY KEY(cod_prova, cod_atleta,cod_fase,cod_bateria),
+	FOREIGN KEY (cod_prova) REFERENCES prova(cod),
+	FOREIGN KEY (cod_atleta) REFERENCES atleta(cod),
+	FOREIGN KEY (cod_fase) REFERENCES fase(id),
+	FOREIGN KEY (cod_bateria) REFERENCES bateria(id)
+)
+
+select * from prova_cs
 
 CREATE TABLE recorde(
 cod_prova INT NOT NULL,
@@ -44,7 +88,7 @@ FOREIGN KEY (cod_atleta) REFERENCES atleta(cod)
 )
 
 INSERT INTO pais VALUES
-('AFG', 'Afeganistao')
+('AFG', 'Afeganistao'),
 ('ALB', 'Albania'),
 ('ALG', 'Argelia'),
 ('AND', 'Andorra'),
@@ -73,7 +117,7 @@ INSERT INTO pais VALUES
 ('BRA', 'Brasil')
 
 INSERT INTO prova VALUES
-('Lançamento de Dado / Javelin Throw', 'F', 1)
+('Lançamento de Dado / Javelin Throw', 'F', 1),
 ('Salto em Distancia / Long Jump', 'M', 1),
 ('Salto com Vara / Pole Vault', 'M', 1),
 ('Salto com Vara / Pole Vault', 'M', 1),
@@ -90,7 +134,7 @@ INSERT INTO prova VALUES
 ('800m / 800m', 'M', 2),
 ('200m / 200m', 'F', 2),
 ('200m / 200m', 'M', 2)
-
+select * from atleta
 INSERT INTO atleta VALUES
 ('AFG', 'Skender Halil', 'M'),
 ('AFG', 'Moema Partha', 'F'),
@@ -100,3 +144,4 @@ INSERT INTO atleta VALUES
 ('ALG', 'Eudocia Erlendr', 'M'),
 ('AND', 'Bradley Jodocus', 'M'),
 ('AND', 'Bozhidara Katrina', 'M')
+
