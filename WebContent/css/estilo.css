@@ -148,6 +148,7 @@ table.blueTable thead th {
 table.blueTable thead th:first-child {
   border-left: none;
 }
+
 option{
 	border:1px solid #fffc63;
 	width:100px;
@@ -155,7 +156,7 @@ option{
 }
 label{
 	font-family:century gothic;
-	margin-left:35%;
+	margin-left:40%;
 	margin-top:2%;
 }
 .posicao{

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+    <%@ page import="java.sql.*, dao.*, java.util.*,model.*"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -17,43 +18,61 @@
 <table>
 	<tr>
 		<td>
-			<label>Atleta:</label>
-			<select id="atleta">
-				<option>--</option>
+			<label>FASE:</label>
+			<select id="fase">
+				<option value="1">INICIAL</option>
+				<option value="2">FINAL</option>
 			</select>
 		</td>
 	</tr>
 	<tr>
 		<td>
-			<label>Modalidade:</label>
-			<select id="modalidade" >
-				<option>Corrida</option>
-				<option>Salto</option>
+			<label>Atleta:</label>
+			<select id="atleta">
+			<%
+				Lista lista= new Lista();
+				List<Atleta> at=lista.ListaAtleta();
+				for(Atleta a: at){
+			%>
+				<option value="<%=a.getCod()%>" style="width:150px;"><%=a.getNome()%></option>
+			<%
+				}
+			%>
 			</select>
 		</td>
 	</tr>
-		<tr>
+	<tr>
+		<td>
+			<label>Prova:</label>
+			<select id="prova" >
+			<%
+				Lista listaP= new Lista();
+				List<Prova> pr=listaP.ListaModalidade();
+				for(Prova p: pr){
+			%>
+				<option value="<%=p.getTipo()%>" style="width:150px;"><%=p.getProva()%></option>
+			<%
+				}
+			%>
+			</select>
+		</td>
+	</tr>
+	<tr>
 		<td>
 			<label>Bateria:</label>
 			<select id="bateria">
-				<option>1ºSalto</option>
-				<option>2ºSalto</option>
-				<option>3ºSalto</option>
-				<option>4ºSalto</option>
-				<option>5ºSalto</option>
-				<option>6ºSalto</option>
 			</select>
 		</td>
 	</tr>
 		<tr>
 		<td>
 			<label>Desempenho:</label>
-			<input type="text/css"/>
+			<input type="" id="time" style="width:130px;"/>
 		</td>
 	</tr>
 	<tr>
 		<td>
-			<button class="btn">Inserir</button>
+			<button class="btn" id="inserir">Inserir</button>
 		</td>
 	</tr>
 </table>
@@ -61,12 +80,16 @@
 	<script src="https://code.jquery.com/jquery-1.10.1.js" integrity="sha256-663tSdtipgBgyqJXfypOwf9ocmvECGG8Zdl3q+tk+n0=" crossorigin="anonymous"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
-		$('#modalidade').change(function(){
-			var ss=$("#modalidade option:selected").val();
-			if(ss=="Salto") {
-					$('#bateria').html('<select id="bateria"><option>1ºSalto</option><option>2ºSalto</option><option>3ºSalto</option><option>4ºSalto</option><option>5ºSalto</option><option>6ºSalto</option></select>');
-			    } else {
-			    	 $('#bateria').html('<select disabled></select>');
+		$('#prova').change(function(){
+			var ss=$('#prova option:selected').val();
+			if(ss==1) {
+					$('#bateria').html('<select id="bateria"><option>1ºCiclo</option><option>2ºCiclo</option><option>3ºCiclo</option><option>4ºCiclo</option><option>5ºCiclo</option><option>6ºCiclo</option></select>');
+					$('#time').prop('type', 'text');
+					document.getElementById("time").value = " ";
+			    } else{
+			    	 $('#bateria').html('<select disabled><option>--</option></select>');
+			    	 $('#time').prop('type', 'time');
+			    	 document.getElementById("time").value = "00:00:00";
 			    }
 		});
 		});

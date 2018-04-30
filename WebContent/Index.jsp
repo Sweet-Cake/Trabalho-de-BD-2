@@ -21,11 +21,28 @@
 		<option>INICIAL</option>
 		<option>FINAL</option>
 	</select>
-	<button class="btn">Ir!</button>
 	<table class="blueTable"id="tabela">
 		<thead>
 		<tr>
 		<th style="color:#000;">Código</th>
+		<th style="color:#000;">Atleta</th>
+		<th style="color:#000;">País</th>
+		<th style="color:#000;">Resultado</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+		<td>cell1_1</td>
+		<td>cell2_1</td>
+		<td>cell3_1</td>
+		<td>cell4_1</td>
+		</tr>
+		</tbody>
+	</table>
+	<table class="blueTable"id="tabela2" style="display:none;">
+		<thead>
+		<tr>
+		<th style="color:#000;">Cód</th>
 		<th style="color:#000;">Atleta</th>
 		<th style="color:#000;">País</th>
 		<th style="color:#000;">Resultado</th>
@@ -58,6 +75,22 @@
 		<button>Ir!</button>
 	</fieldset>
 	</div>
+	<script src="https://code.jquery.com/jquery-1.10.1.js" integrity="sha256-663tSdtipgBgyqJXfypOwf9ocmvECGG8Zdl3q+tk+n0=" crossorigin="anonymous"></script>
+	<script type="text/javascript">
+	$(document).ready(function(){
+		$('#fase').change(function(){
+			var val=$('#fase option:selected').val();
+			if (val=="INICIAL"){
+				$("#tabela2").css("display","none");
+				$("#tabela").css("display","table");
+			}else{
+				$("#tabela").css("display","none");
+				$("#tabela2").css("display","table");
+			}
+		});
+	});
+	</script>
+	
 </form>
 </div>
 </body>
