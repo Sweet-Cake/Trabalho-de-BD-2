@@ -7,6 +7,36 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="stylesheet" type="text/css" href="css/style.css"/>
 <title>Atletismo</title>
+
+<script src="https://code.jquery.com/jquery-1.6.2.js" integrity="sha256-pXKSYZ0U64y9kjvenyjPmUrGarxI98l1t2kyj/M73ck=" crossorigin="anonymous"></script>
+	<script text="text/javascript">
+			$(document).ready(function(){
+				$('#inserir').click(function(){
+					
+					var Fase = $("#fase option:selected").val();
+					var Atleta = $("#atleta option:selected").val();
+					var Prova = $("#prova option:selected").val();
+					var Bateria = $("#bateria option:selected").val();
+					var Desempenho = $("#time").val();
+					$.ajax({
+						type:'POST',
+						data:{fase: Fase,
+							atleta: Atleta,
+							prova: Prova,
+							bateria: Bateria,
+							desempenho: Desempenho
+						},
+						url:'controleAdd',
+						success: function(result){
+					alert('Fase: '+Prova);
+					}
+					})
+				});
+			});
+	</script>
+
+
+
 </head>
 <body>
 <div class="head">
@@ -19,7 +49,7 @@
 	<tr>
 		<td>
 			<label>FASE:</label>
-			<select id="fase">
+			<select name="fase" id="fase">
 				<option value="1">INICIAL</option>
 				<option value="2">FINAL</option>
 			</select>
@@ -28,7 +58,7 @@
 	<tr>
 		<td>
 			<label>Atleta:</label>
-			<select id="atleta">
+			<select name="atleta" id="atleta">
 			<%
 				Lista lista= new Lista();
 				List<Atleta> at=lista.ListaAtleta();
@@ -67,7 +97,7 @@
 		<tr>
 		<td>
 			<label>Desempenho:</label>
-			<input type="" id="time" style="width:130px;"/>
+			<input type="" id="time" name = "time" style="width:130px;"/>
 		</td>
 	</tr>
 	<tr>
