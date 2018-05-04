@@ -145,3 +145,31 @@ INSERT INTO atleta VALUES
 ('AND', 'Bradley Jodocus', 'M'),
 ('AND', 'Bozhidara Katrina', 'M')
 
+
+INSERT INTO bateria VALUES
+(1, '1ºCiclo'),
+(2, '2ºCiclo'),
+(3, '3ºCiclo'),
+(4, '4ºCiclo'),
+(5, '5ºCiclo'),
+(6, '6ºCiclo')
+
+
+-------------
+
+
+CREATE PROCEDURE sp_adiciona(@cod_prova INT, @cod_atleta INT, @cod_fase INT,
+							 @bateria VARCHAR(50), @resultado VARCHAR(50))
+AS
+IF (@bateria = '--')
+BEGIN
+	INSERT INTO prova_corrida VALUES
+	(@cod_prova,@cod_atleta,@cod_fase,@resultado)
+END
+ELSE
+BEGIN
+	DECLARE @cod_bateria INT
+	SET @cod_bateria = (SELECT id FROM bateria WHERE nome = @bateria)
+	INSERT INTO prova_cs VALUES
+	(@cod_prova,@cod_atleta ,@cod_fase ,@cod_bateria, @resultado)
+END

@@ -1,6 +1,8 @@
 package controle;
 
 import java.io.IOException;
+import java.sql.SQLException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -37,16 +39,29 @@ public class controleAdd extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String fase = request.getParameter("fase");
-		String atleta = request.getParameter("atleta");
-		String prova = request.getParameter("prova");
+		Insert insert = new Insert();
+		int fase = Integer.parseInt(request.getParameter("fase"));
+		int atleta = Integer.parseInt(request.getParameter("atleta"));
+		int prova = Integer.parseInt(request.getParameter("prova"));
 		String bateria = request.getParameter("bateria");
 		String desempenho = request.getParameter("desempenho");
-		if (bateria.equals("--")){
+		System.out.println("----V");
+		try {
+			if (bateria.equals("--")){
+				desempenho = "00:"+desempenho;
+			}
+			insert.inserir(fase, atleta, prova, bateria, desempenho);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("----^");
+		/*
+		if (!bateria.equals("--")){
 			System.out.println(fase+" "+atleta+" "+prova+"  "+desempenho);
 		}else{
 		System.out.println(fase+" "+atleta+" "+prova+" "+bateria+"  "+desempenho);
-		}
+		}*/
 	}
 
 }
