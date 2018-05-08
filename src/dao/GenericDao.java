@@ -8,7 +8,7 @@ public class GenericDao {
 
 	private final static String USERNAME = "user";
 	private final static String PASSWORD = "123456";
-	private final static String URLDB = "jdbc:jtds:sqlserver://localhost:49424/databasename=atletismo;instance=SQLEXPRESS;";
+	private final static String URLDB = "jdbc:jtds:sqlserver://localhost:49424/databasename=atletismo;instance=MSSQLSERVER;";
 	private static GenericDao instancia;
 	private Connection con;
 
