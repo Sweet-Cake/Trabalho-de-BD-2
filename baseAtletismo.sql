@@ -158,18 +158,22 @@ INSERT INTO bateria VALUES
 -------------
 
 
-CREATE PROCEDURE sp_adiciona(@cod_prova INT, @cod_atleta INT, @cod_fase INT,
+CREATE PROCEDURE sp_adiciona(@prova VARCHAR(50), @cod_atleta INT, @cod_fase INT,
 							 @bateria VARCHAR(50), @resultado VARCHAR(50))
 AS
-IF (@bateria = '--')
-BEGIN
-	INSERT INTO prova_corrida VALUES
-	(@cod_prova,@cod_atleta,@cod_fase,@resultado)
-END
-ELSE
-BEGIN
-	DECLARE @cod_bateria INT
-	SET @cod_bateria = (SELECT id FROM bateria WHERE nome = @bateria)
-	INSERT INTO prova_cs VALUES
-	(@cod_prova,@cod_atleta ,@cod_fase ,@cod_bateria, @resultado)
-END
+	DECLARE @cod_prova INT
+	DECLARE @sexo VARCHAR(1)
+	SET @sexo = (SELECT sexo FROM atleta where cod = @cod_atleta)
+	SET @cod_prova = (SELECT cod FROM prova WHERE prova = @prova and sexo = @sexo)
+	IF (@bateria = '--')
+	BEGIN
+		INSERT INTO prova_corrida VALUES
+		(@cod_prova,@cod_atleta,@cod_fase,@resultado)
+	END
+	ELSE
+	BEGIN
+		DECLARE @cod_bateria INT
+		SET @cod_bateria = (SELECT id FROM bateria WHERE nome = @bateria)
+		INSERT INTO prova_cs VALUES
+		(@cod_prova,@cod_atleta ,@cod_fase ,@cod_bateria, @resultado)
+	END

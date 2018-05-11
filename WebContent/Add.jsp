@@ -15,7 +15,7 @@
 					
 					var Fase = $("#fase option:selected").val();
 					var Atleta = $("#atleta option:selected").val();
-					var Prova = $("#prova option:selected").val();
+					var Prova = $("#prova option:selected").text();
 					var Bateria = $("#bateria option:selected").val();
 					var Desempenho = $("#time").val();
 					$.ajax({
@@ -64,7 +64,7 @@
 				List<Atleta> at=lista.ListaAtleta();
 				for(Atleta a: at){
 			%>
-				<option value="<%=a.getCod()%>" style="width:150px;"><%=a.getNome()%></option>
+				<option value="<%=a.getCod()%>" id="<%=a.getNome()%>" style="width:150px;"><%=a.getNome()%></option>
 			<%
 				}
 			%>

@@ -42,7 +42,7 @@ public class controleAdd extends HttpServlet {
 		Insert insert = new Insert();
 		int fase = Integer.parseInt(request.getParameter("fase"));
 		int atleta = Integer.parseInt(request.getParameter("atleta"));
-		int prova = Integer.parseInt(request.getParameter("prova"));
+		String prova = request.getParameter("prova");
 		String bateria = request.getParameter("bateria");
 		String desempenho = request.getParameter("desempenho");
 		System.out.println("----V");
