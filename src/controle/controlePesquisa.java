@@ -45,16 +45,38 @@ public class controlePesquisa extends HttpServlet {
 		String prova = request.getParameter("prova");
 		String bateria = request.getParameter("bateria");
 		String fase=request.getParameter("fase");
-		try {
-			List<Desempenho> d=i.buscar(prova, bateria, fase);
-			request.setAttribute("DESEMPENHO" , d );
-			System.out.println("OK");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		String prova1=request.getParameter("prova1");
+		String fase1 =request.getParameter("fase1");
+		String msg = request.getParameter("cmd");
+		switch (msg.toLowerCase()){
+			case "ir":
+			try {
+				List<Desempenho> d=i.buscar(prova, bateria, fase);
+				request.setAttribute("DESEMPENHO" , d );
+				System.out.println("OK");
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			RequestDispatcher rd = request.getRequestDispatcher("./Index.jsp");
+			rd.forward(request, response);
+			break;
+			case "buscar":
+				try {
+					List<Desempenho> p=i.Prova(fase1,prova1);
+					request.setAttribute("PROVA" , p );
+					System.out.println("OK");
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				RequestDispatcher rd2 = request.getRequestDispatcher("./Index.jsp");
+				rd2.forward(request, response);
+			break;
+			default:
+				System.out.println("Nothin' to see here, kiddo");
+			break;
 		}
-		RequestDispatcher rd = request.getRequestDispatcher("./Index.jsp");
-		rd.forward(request, response);
 	}
 
 }

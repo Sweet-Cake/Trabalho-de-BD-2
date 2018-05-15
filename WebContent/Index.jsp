@@ -21,13 +21,32 @@
 	<script src="https://code.jquery.com/jquery-1.6.2.js" integrity="sha256-pXKSYZ0U64y9kjvenyjPmUrGarxI98l1t2kyj/M73ck=" crossorigin="anonymous"></script>
 	<script text="text/javascript">
 	</script>
-<div class="contain">
+<div class="topo">
+<form method="post" action="./controlePesquisa">
 	<label>FASE:</label>
-	<select id="fase">
-		<option>--</option>
+	<select name="fase1">
 		<option>INICIAL</option>
 		<option>FINAL</option>
 	</select>
+	<label>PROVA:</label>
+	<select name ="prova1">
+		<%
+				Lista provinha= new Lista();
+				List<Prova> pro=provinha.ListaModalidade();
+				for(Prova prova: pro){
+			%>
+				<option value="<%=prova.getProva()%>" style="width:150px;"><%=prova.getProva()%></option>
+			<%
+				}
+			%>
+	</select>
+		<input id="buscar" name="cmd" type="submit" value="buscar"/>
+</div>
+<div class="contain">
+		<%
+			   List<Desempenho> prova = (List<Desempenho>)request.getAttribute("PROVA"); 
+			   	if (prova != null && prova.size() > 0) { 
+				%>
 	<table class="blueTable"id="tabela">
 		<thead>
 		<tr>
@@ -39,31 +58,16 @@
 		</thead>
 		<tbody>
 		<tr>
-		<td>cell1_1</td>
-		<td>cell2_1</td>
-		<td>cell3_1</td>
-		<td>cell4_1</td>
+		<% for (Desempenho de : prova) {  %>
+		<td><%=de.getCodAtl() %></td>
+		<td><%= de.getNome()%></td>
+		<td><%=de.getPais() %></td>
+		<td><%=de.getResultado()%></td>
 		</tr>
+		<% } %>
 		</tbody>
 	</table>
-	<table class="blueTable"id="tabela2" style="display:none;">
-		<thead>
-		<tr>
-		<th style="color:#000;">Cód</th>
-		<th style="color:#000;">Atleta</th>
-		<th style="color:#000;">País</th>
-		<th style="color:#000;">Resultado</th>
-		</tr>
-		</thead>
-		<tbody>
-		<tr>
-		<td>cell1_1</td>
-		<td>cell2_1</td>
-		<td>cell3_1</td>
-		<td>cell4_1</td>
-		</tr>
-		</tbody>
-	</table>
+	<% } %>
 		<% 
 				List<Desempenho> d = (List<Desempenho>)request.getAttribute("DESEMPENHO"); 
 			   	if (d != null && d.size() > 0) { 
@@ -94,9 +98,12 @@
 					</tbody>
 				</table>
 				<% } %>
-	<div class="aside">
-		<form method="post" action="./controlePesquisa">
+</div>
+<div class="aside">
 			<h3 align="center">Quero Pesquisar</h3>
+			<table id="shame">
+			<tr>
+			<td>
 				<label>PROVA:</label>
 						<select class="posicao" id="prova" name="prova">
 							<%
@@ -109,19 +116,38 @@
 								}
 							%>
 						</select>
+					</td>
+				</tr>
+				<tr>
+				<td>
 						<label>BATERIA:</label>
 						<select class="posicao" id="bateria" name="bateria">
 							<option>1ºCiclo</option>
+							<option>2ºCiclo</option>
+							<option>3ºCiclo</option>
+							<option>4ºCiclo</option>
+							<option>5ºCiclo</option>
+							<option>6ºCiclo</option>
 						</select>
+				</td>
+				</tr>
+				<tr>
+				<td>
 							<label>FASE:</label>
 						<select class="posicao" id="fase" name="fase">
 							<option value="INICIAL">INICIAL</option>
 							<option value="FINAL">FINAL</option>
 						</select>
-						<button id="ir" >Ir! </button>
+				</td>
+				</tr>
+				<tr>
+				<td>
+					<input type="submit" id="ir" name="cmd" value="ir">
+				</td>
+				</tr>
+			</table>
 			</form>
-	</div>
-	</div>
+</div>
 	<script src="https://code.jquery.com/jquery-1.10.1.js" integrity="sha256-663tSdtipgBgyqJXfypOwf9ocmvECGG8Zdl3q+tk+n0=" crossorigin="anonymous"></script>
 	<script type="text/javascript">
 	$(document).ready(function(){
@@ -138,6 +164,20 @@
 			}
 		});
 	});
+	</script>
+	<script src="https://code.jquery.com/jquery-1.10.1.js" integrity="sha256-663tSdtipgBgyqJXfypOwf9ocmvECGG8Zdl3q+tk+n0=" crossorigin="anonymous"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+		$('#prova').change(function(){
+			var ss=$('#prova option:selected').val();
+			var length = $("#prova")[0].selectedIndex;
+			if(length<7) {
+					$('#bateria').html('<select id="bateria"><option>1ºCiclo</option><option>2ºCiclo</option><option>3ºCiclo</option><option>4ºCiclo</option><option>5ºCiclo</option><option>6ºCiclo</option></select>');
+			    } else{
+			    	 $('#bateria').html('<select disabled><option>1ºCiclo</option></select>');
+			    }
+		});
+		});
 	</script>
 </body>
 </html>
