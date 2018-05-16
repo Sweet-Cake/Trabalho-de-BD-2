@@ -70,7 +70,7 @@ begin
 	begin
 		return ((select count(cod) from atleta where sexo = (select sexo from prova where cod = @cod))*6)
 	end
-		return (select count(cod) from atleta where sexo = (select sexo from prova where cod = 12))
+		return (select count(cod) from atleta where sexo = (select sexo from prova where cod = @cod))
 end
 
 ---tabela de provas com finais
