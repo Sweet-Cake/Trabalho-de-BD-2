@@ -88,3 +88,25 @@ begin
 end
 
 select * FROM dbo.fn_pesquisaFinal() as tabela
+
+-----selects para os finalistas
+create function fn_maiorvalor(@prova int, @atleta int)
+returns decimal (7, 2)
+as
+begin
+return (select top 1 d.resultado from desempenho d
+where d.cod_atleta = @atleta and d.cod_prova = @prova
+order by cast(d.resultado as int) desc)
+end
+
+print dbo.fn_maiorvalor(2, 1)
+
+---select para o tipo 1
+select a.nome, cast(d.resultado as decimal(7, 2)) from desempenho d, atleta a
+where d.cod_prova = 2 and a.cod = d.cod_atleta and cast(d.resultado as decimal(7, 2)) = dbo.fn_maiorvalor(d.cod_prova, d.cod_atleta)
+order by cast(d.resultado as decimal(7, 2)) desc
+
+---select´para o tipo 2
+select a.nome, cast(d.resultado as datetime) from desempenho d, atleta a
+where d.cod_prova = 8 and a.cod = d.cod_atleta 
+order by cast(d.resultado as datetime) desc
