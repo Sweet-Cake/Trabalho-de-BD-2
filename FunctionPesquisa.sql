@@ -60,3 +60,31 @@ BEGIN
 		p.cod=@codp AND f.id=@codf
 	RETURN
 END
+
+--função que calcula o total de notas que devem ser inseridas naquela prova
+create function fn_qtacountprova(@tipo int, @cod int)
+returns int
+as
+begin
+	if (@tipo = 1)
+	begin
+		return ((select count(cod) from atleta where sexo = (select sexo from prova where cod = @cod))*6)
+	end
+		return (select count(cod) from atleta where sexo = (select sexo from prova where cod = 12))
+end
+
+---tabela de provas com finais
+create function fn_pesquisafinal()
+returns @tabelaFinal table(
+prova varchar(50))
+as
+begin
+	INSERT INTO @tabelaFinal(prova)
+	(select p.prova from desempenho d, prova p
+	where d.cod_prova = p.cod
+	group by p.prova, d.cod_prova, p.tipo
+	having count(d.cod_prova) >= (dbo.fn_qtacountprova(p.tipo, d.cod_prova)))
+	return
+end
+
+select * FROM dbo.fn_pesquisaFinal() as tabela
