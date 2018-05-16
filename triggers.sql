@@ -44,7 +44,7 @@ disable trigger t_protegepais on pais
 
 
 ----Trigger para garantir que não sejam adicionadas notas da fase final antes da hora, trigger temporária
-
+----A função fn_qtacountprova deve ser criada antes
 create trigger tr_verificafinal on desempenho 
 for insert
 as
@@ -55,10 +55,11 @@ begin
 	set @prova = (select cod_prova from inserted)
 	if (@fase = 2)
 	begin
-		if ((select count(d.cod_prova) from desempenho d where  d.cod_prova = @prova) < (select count(cod) from atleta where sexo = (select sexo from prova where cod = @prova)))
+		if ((select count(d.cod_prova) from desempenho d where  d.cod_prova = @prova) < (dbo.fn_qtacountprova((select tipo from prova where cod = @prova), @prova)))
 		begin
 			rollback transaction
-			raiserror('Não é possivel adicionar notas da fase final nessa prova no momento', 16, 16)
+			raiserror('Não é possivel adicionar nota na parte final no momento', 16, 16)
 		end
 	end
 end
+
