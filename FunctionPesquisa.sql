@@ -110,3 +110,20 @@ order by cast(d.resultado as decimal(7, 2)) desc
 select a.nome, cast(d.resultado as datetime) from desempenho d, atleta a
 where d.cod_prova = 8 and a.cod = d.cod_atleta 
 order by cast(d.resultado as datetime) desc
+
+--select atletas
+create alter function fn_pesquisaatleta(@prova varchar(50))
+returns @tabelaAtleta table(
+nome varchar(50),
+cod int)
+as
+begin
+declare @cod_prova int,  @sexo varchar(1)
+set @cod_prova = (select cod from prova where prova = @prova)
+set @sexo = (select sexo from prova where cod = @cod_prova)
+INSERT INTO @tabelaAtleta(cod, nome)
+(select cod, nome from atleta where sexo = @sexo)
+return
+end
+
+select * FROM dbo.fn_pesquisaatleta('100m / 100m') as tabela
