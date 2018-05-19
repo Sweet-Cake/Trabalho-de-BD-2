@@ -157,6 +157,20 @@ INSERT INTO bateria VALUES
 
 -------------
 
+
+CREATE PROCEDURE sp_adiciona(@prova VARCHAR(50), @cod_atleta INT, @cod_fase INT,
+							 @bateria VARCHAR(50), @resultado VARCHAR(50))
+AS
+	DECLARE @cod_prova INT, @cod_bateria INT
+	DECLARE @sexo VARCHAR(1)
+	SET @sexo = (SELECT sexo FROM atleta where cod = @cod_atleta)
+	SET @cod_prova = (SELECT cod FROM prova WHERE prova = @prova and sexo = @sexo)
+	SET @cod_bateria = (SELECT id FROM bateria WHERE nome = @bateria)
+	INSERT INTO desempenho VALUES
+		(@cod_prova,@cod_atleta,@cod_bateria, @cod_fase,@resultado)
+		
+-------------
+
 CREATE PROCEDURE sp_adiciona(@prova VARCHAR(50), @cod_atleta INT, @cod_fase INT,
 							 @bateria VARCHAR(50), @resultado VARCHAR(50))
 AS
