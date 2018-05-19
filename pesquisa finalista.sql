@@ -4,7 +4,7 @@ returns decimal (7, 2)
 as
 begin
 return (select top 1 dbo.fn_convertemetro(d.resultado) from desempenho d
-where d.cod_atleta = 2 and d.cod_prova = 5
+where d.cod_atleta = @atleta and d.cod_prova = @prova
 order by dbo.fn_convertemetro(d.resultado)  desc)
 end
 
@@ -51,4 +51,25 @@ end
 
 select top 3 a.nome, dbo.fn_convertehora(d.resultado) from desempenho d, atleta a
 where d.cod_prova = 8 and a.cod = d.cod_atleta 
-order by dbo.fn_convertehora(d.resultado) desc
+order by dbo.fn_convertehora(d.resultado)
+
+--procedure da lista
+
+create alter procedure sp_listaatletasf(@prova varchar(50))
+as
+declare @cod_prova int, @tipo int
+set @cod_prova = (select cod from prova where prova = @prova)
+set @tipo = (select tipo from prova where prova = @prova)
+if (@tipo = 1)
+begin
+	select top 8 a.nome, d.cod_atleta as cod from desempenho d, atleta a
+	where d.cod_prova = @cod_prova and a.cod = d.cod_atleta and dbo.fn_convertemetro(d.resultado) = dbo.fn_maiorvalor(d.cod_prova, d.cod_atleta)
+	order by dbo.fn_convertemetro(d.resultado) desc
+end
+else
+begin
+	select top 8 a.nome, d.cod_atleta  as cod from desempenho d, atleta a
+	where d.cod_prova = @cod_prova and a.cod = d.cod_atleta 
+	order by dbo.fn_convertehora(d.resultado)
+end
+ 
