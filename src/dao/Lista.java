@@ -23,6 +23,36 @@ public class Lista {
 		}
 		return atleta;
 	}
+	public String ListaAtletaInicial(String prova) throws SQLException {
+		Connection con = (Connection) GenericDao.getInstance().getConnection();
+		PreparedStatement pstmt = (PreparedStatement) con.prepareStatement("select * FROM dbo.fn_pesquisaatleta(?) as tabela");
+		pstmt.setString(1,prova);
+		ResultSet rs = pstmt.executeQuery();
+		List<Atleta> atleta = new ArrayList<Atleta>();
+		System.out.println("fu-ta-ri");
+		System.out.println("harururun");
+		String msg = "<option value='0' style='width:150px;'>Natalia</option>";
+		while(rs.next()) { 
+			Atleta a = new Atleta();
+			msg = msg + "<option value='"+rs.getInt("cod") + "' style='width:150px'>"+rs.getString("nome")+"</option>";
+		}
+		return msg;
+	}
+	public String ListaAtletaFinalista(String prova) throws SQLException {
+		Connection con = (Connection) GenericDao.getInstance().getConnection();
+		PreparedStatement pstmt = (PreparedStatement) con.prepareStatement("exec sp_listaatletasf ?");
+		pstmt.setString(1,prova);
+		ResultSet rs = pstmt.executeQuery();
+		List<Atleta> atleta = new ArrayList<Atleta>();
+		System.out.println("kitta!!!");
+		System.out.println("you are my angel <3");
+		String msg = "<option value='0' style='width:150px;'>Layla</option>";
+		while(rs.next()) { 
+			Atleta a = new Atleta();
+			msg = msg + "<option value='"+rs.getInt("cod") + "' style='width:150px'>"+rs.getString("nome")+"</option>";
+		}
+		return msg;
+	}
 	public List<Prova> ListaModalidade() throws SQLException {
 		Connection con = (Connection) GenericDao.getInstance().getConnection();
 		PreparedStatement pstmt = (PreparedStatement) con.prepareStatement("SELECT * FROM prova");
@@ -36,5 +66,44 @@ public class Lista {
 			prova.add(p);
 		}
 		return prova;
+	}
+	public String ListaModalidadea() throws SQLException {
+		Connection con = (Connection) GenericDao.getInstance().getConnection();
+		PreparedStatement pstmt = (PreparedStatement) con.prepareStatement("SELECT * FROM prova");
+		ResultSet rs = pstmt.executeQuery();
+		List<Prova> prova = new ArrayList<Prova>();
+		String msg = "<option value='0' style='width:150px;'>Calie</option>";
+		while(rs.next()) { 
+			Prova p = new Prova();
+			msg = msg + "<option value='"+rs.getInt("tipo") + "' style='width:150px'>"+rs.getString("prova")+"</option>";
+		}
+		return msg;
+	}
+	
+	/*public List<Prova> ListaFinalista() throws SQLException {
+		Connection con = (Connection) GenericDao.getInstance().getConnection();
+		PreparedStatement pstmt = (PreparedStatement) con.prepareStatement("select * FROM dbo.fn_pesquisaFinal() as tabela");
+		ResultSet rs = pstmt.executeQuery();
+		List<Prova> prova = new ArrayList<Prova>();
+		while(rs.next()) { 
+			Prova p = new Prova();
+			p.setProva(rs.getString("prova"));
+			p.setTipo(rs.getInt("tipo"));
+			prova.add(p);
+		}
+		return prova;
+	}*/
+	
+	public String ListaFinalista() throws SQLException {
+		Connection con = (Connection) GenericDao.getInstance().getConnection();
+		PreparedStatement pstmt = (PreparedStatement) con.prepareStatement("select * FROM dbo.fn_pesquisaFinal() as tabela");
+		ResultSet rs = pstmt.executeQuery();
+		List<Prova> prova = new ArrayList<Prova>();
+		String msg = "<option value='0' style='width:150px;'>Marie</option>";
+		while(rs.next()) { 
+			Prova p = new Prova();
+			msg = msg + "<option value='"+rs.getInt("tipo") + "' style='width:150px'>"+rs.getString("prova")+"</option>";
+		}
+		return msg;
 	}
 }

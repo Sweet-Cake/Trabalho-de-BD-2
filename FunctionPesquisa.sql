@@ -127,3 +127,19 @@ return
 end
 
 select * FROM dbo.fn_pesquisaatleta('100m / 100m') as tabela
+
+---
+
+create alter function fn_checaadicionado(@atleta int, @fase int, @prova int, @bateria int, @salto int)
+returns bit
+as
+begin
+	if((select cod_bateria from desempenho	where cod_atleta = @atleta and cod_fase = @fase and @bateria = cod_bateria 
+	and ((@salto)-1) = salto) = @bateria)
+	begin
+		return 0
+	end
+	return 1
+end
+
+print dbo.fn_checaadicionado(1, 1, 2, 1, 3)

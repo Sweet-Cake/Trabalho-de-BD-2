@@ -57,33 +57,18 @@
 	</tr>
 	<tr>
 		<td>
-			<label>Atleta:</label>
-			<select name="atleta" id="atleta">
-			<%
-				Lista lista= new Lista();
-				List<Atleta> at=lista.ListaAtleta();
-				for(Atleta a: at){
-			%>
-				<option value="<%=a.getCod()%>" id="<%=a.getNome()%>" style="width:150px;"><%=a.getNome()%></option>
-			<%
-				}
-			%>
+			<label>Prova:</label>
+			<select id="prova" >
+			<option>--</option></select>
 			</select>
+			
 		</td>
 	</tr>
 	<tr>
 		<td>
-			<label>Prova:</label>
-			<select id="prova" >
-			<%
-				Lista listaP= new Lista();
-				List<Prova> pr=listaP.ListaModalidade();
-				for(Prova p: pr){
-			%>
-				<option value="<%=p.getTipo()%>" style="width:150px;"><%=p.getProva()%></option>
-			<%
-				}
-			%>
+			<label>Atleta:</label>
+			<select name="atleta" id="atleta">
+			<option>--</option></select>
 			</select>
 		</td>
 	</tr>
@@ -91,6 +76,7 @@
 		<td>
 			<label>Bateria:</label>
 			<select id="bateria">
+			<option>--</option></select>
 			</select>
 		</td>
 	</tr>
@@ -110,6 +96,50 @@
 	<script src="https://code.jquery.com/jquery-1.10.1.js" integrity="sha256-663tSdtipgBgyqJXfypOwf9ocmvECGG8Zdl3q+tk+n0=" crossorigin="anonymous"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
+		$('#fase').change(function(){
+			var ss=$('#fase option:selected').val();
+			$('#atleta').html('<select disabled><option>--</option></select>');
+			$('#bateria').html('<select disabled><option>--</option></select>');
+			if(ss==1) {
+				var cmd = "inicial";
+				$.ajax({
+					type:'POST',
+					data:{cmd: cmd,
+					},
+					url:'Teste',
+					success: function(result){
+						$('#prova').html(result);
+				}})
+		    } else{
+		    	var cmd = "final";
+				$.ajax({
+					type:'POST',
+					data:{cmd: cmd,
+					},
+					url:'Teste',
+					success: function(result){
+						$('#prova').html(result);
+				}})
+		    }
+		});
+		});
+	</script>
+
+	<script src="https://code.jquery.com/jquery-1.10.1.js" integrity="sha256-663tSdtipgBgyqJXfypOwf9ocmvECGG8Zdl3q+tk+n0=" crossorigin="anonymous"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+		$('#prova').change(function(){
+			var ss=$('#prova option:selected').text();
+			if(ss!='Marie') {
+					alert('Calie');
+			    }
+		});
+		});
+	</script>
+
+	<script src="https://code.jquery.com/jquery-1.10.1.js" integrity="sha256-663tSdtipgBgyqJXfypOwf9ocmvECGG8Zdl3q+tk+n0=" crossorigin="anonymous"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
 		$('#prova').change(function(){
 			var ss=$('#prova option:selected').val();
 			if(ss==1) {
@@ -117,10 +147,44 @@
 					$('#time').prop('type', 'text');
 					document.getElementById("time").value = " ";
 			    } else{
-			    	 $('#bateria').html('<select disabled><option>--</option></select>');
-			    	 $('#time').prop('type', 'time');
-			    	 document.getElementById("time").value = "00:00:00";
+			    	if(ss==2){
+			    		$('#bateria').html('<select id="bateria"><option>1ºCiclo</option><option>2ºCiclo</option><option>3ºCiclo</option><option>4ºCiclo</option><option>5ºCiclo</option><option>6ºCiclo</option></select>');
+			    	 $('#time').prop('type', 'text');
+			    	 document.getElementById("time").value = "00:00:00:000";
+			    	}else {
+			    		$('#bateria').html('<select disabled><option>--</option></select>');
+						$('#time').prop('type', 'text');
+						document.getElementById("time").value = "--";
+			    	}
 			    }
+			if(ss!=0){
+				var ff = $("#fase option:selected").val();
+				var prova = $("#prova option:selected").text();
+				if (ff==1){
+					var cmd = "prova";
+					$.ajax({
+						type:'POST',
+						data:{cmd: cmd,
+							prova: prova,
+						},
+						url:'Teste',
+						success: function(result){
+							$('#atleta').html(result);
+					}})
+				}else{
+					var cmd = "provaf";
+					$.ajax({
+						type:'POST',
+						data:{cmd: cmd,
+							prova: prova,
+						},
+						url:'Teste',
+						success: function(result){
+							$('#atleta').html(result);
+					}})
+				}
+				
+			}
 		});
 		});
 	</script>
