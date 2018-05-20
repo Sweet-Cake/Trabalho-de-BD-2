@@ -1,13 +1,12 @@
 --pesquisa salto
-create alter function fn_maiorvalor(@prova int, @atleta int)
+create alter function fn_maiorvalor(@prova int, @atleta int, @codf int)
 returns decimal (7, 2)
 as
 begin
-return (select top 1 dbo.fn_convertemetro(d.resultado) from desempenho d
-where d.cod_atleta = @atleta and d.cod_prova = @prova
-order by dbo.fn_convertemetro(d.resultado)  desc)
+declare @valor decimal(7, 2)
+set @valor = (select max(dbo.fn_convertemetro(resultado)) from desempenho where cod_prova = @prova and cod_atleta = @atleta and cod_fase = @codf)
+return dbo.fn_convertemetro(@valor)
 end
-
 
 CREATE alter FUNCTION fn_convertemetro(@resultado varchar(50))
 returns decimal(7, 2)

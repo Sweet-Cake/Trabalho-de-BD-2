@@ -91,7 +91,7 @@ BEGIN
 		IF (@tipo = 1)
 		BEGIN
 			INSERT INTO @tabelaProva(Codigo,Nome,Pais,Resultado)
-			SELECT top 8 atl.cod,atl.nome,ps.nome,d.resultado FROM desempenho d
+			SELECT top 30 atl.cod,atl.nome,ps.nome,d.resultado FROM desempenho d
 			INNER JOIN prova p
 			ON d.cod_prova=p.cod
 			INNER JOIN fase f
@@ -104,7 +104,7 @@ BEGIN
 			ON atl.cod_pais=ps.cod
 			WHERE
 			p.cod=@codp AND f.id=@codf
-			AND d.resultado = dbo.fn_maiorvalor(@codp, atl.cod)
+			AND dbo.fn_convertemetro(d.resultado) = dbo.fn_maiorvalor(@codp, atl.cod, @codf)
 			ORDER BY dbo.fn_convertemetro(d.resultado) DESC
 		END
 		ELSE
@@ -127,6 +127,7 @@ BEGIN
 		END
 	RETURN
 END
+
 
 select * FROM dbo.fn_tabelaDes('Lançamento de Dado / Javelin Throw','1ºCiclo','FINAL') as tabela
 select * FROM dbo.fn_tabelaDes('3000m / 3000m','1ºCiclo','FINAL') as tabelac

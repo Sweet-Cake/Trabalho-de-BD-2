@@ -1,13 +1,12 @@
 CREATE TABLE recorde(
 id_prova INT NOT NULL,
-id_atleta INT NOT NULL,
+nome_atleta VARCHAR(50)NOT NULL,
 tipoR int not null,
 pais varchar(3) not null,
 resultadoE VARCHAR(20),
 resultadoM VARCHAR(20),
 PRIMARY KEY (id_prova, tipoR),
-FOREIGN KEY (id_prova) REFERENCES prova(cod),
-FOREIGN KEY (id_atleta) REFERENCES atleta(cod)
+FOREIGN KEY (id_prova) REFERENCES prova(cod)
 )
 
 insert into recorde(id_prova, id_atleta, tipoR,  pais, resultadoE) values
@@ -18,6 +17,55 @@ insert into recorde(id_prova, id_atleta, tipoR, pais, resultadoE) values
 (12, 3, 1, 'ALB', '00:48:44:000')
 insert into recorde(id_prova, id_atleta, tipoR, pais, resultadoM) values
 (12, 3, 2, 'ALB', '00:45:44:000')
+-----
+
+
+create alter procedure sp_verifrecordeC(@resultado varchar(50), @tipo int, @prova int, @atleta int)
+as
+	if (@tipo = 1)
+	begin
+		declare @resultadoS decimal (7,2)
+		set @resultadoS = dbo.fn_convertemetro(@resultado)
+		if (@resultadoS > (select resultadoE from recorde where id_prova = @prova and tipoR = 1))
+		begin
+			update recorde
+			set resultadoE = @resultadoS,
+			pais = (select cod_pais from atleta where cod = @atleta),
+			nome_atleta = (select nome from atleta where cod = @atleta) 			
+			where id_prova = @prova and tipoR = 1
+			if (@resultadoS > (select resultadoM from recorde where id_prova = @prova and tipoR = 2))
+			begin
+				update recorde
+				set resultadoM = @resultadoS, 
+				pais = (select cod_pais from atleta where cod = @atleta),
+				nome_atleta = (select nome from atleta where cod = @atleta) 
+				where id_prova = @prova and tipoR = 2
+			end
+		end
+	end
+	else
+	begin
+		declare @resultadoC datetime
+		set @resultadoC = dbo.fn_convertehora(@resultado)
+		if (@resultadoC < (select resultadoE from recorde where id_prova = @prova and tipoR = 1))
+		begin
+			update recorde
+			set resultadoE = @resultadoC, 
+			pais = (select cod_pais from atleta where cod = @atleta),
+			nome_atleta = (select nome from atleta where cod = @atleta) 
+			where id_prova = @prova and tipoR = 1
+			if (@resultadoC < (select resultadoM from recorde where id_prova = @prova and tipoR = 2))
+			begin
+				update recorde 
+				set resultadoM = @resultadoC,
+				pais = (select cod_pais from atleta where cod = @atleta),
+				nome_atleta = (select nome from atleta where cod = @atleta) 
+				where id_prova = @prova and tipoR = 2
+			end
+		end
+	end
+
+
 
 -----
 

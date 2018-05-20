@@ -157,18 +157,58 @@ INSERT INTO bateria VALUES
 
 -------------
 
-
-CREATE PROCEDURE sp_adiciona(@prova VARCHAR(50), @cod_atleta INT, @cod_fase INT,
+CREATE alter PROCEDURE sp_adiciona(@prova VARCHAR(50), @cod_atleta INT, @cod_fase INT,
 							 @bateria VARCHAR(50), @resultado VARCHAR(50))
 AS
 	DECLARE @cod_prova INT, @cod_bateria INT
-	DECLARE @sexo VARCHAR(1)
+	DECLARE @sexo VARCHAR(1), @tipo int
+	declare @salto int
 	SET @sexo = (SELECT sexo FROM atleta where cod = @cod_atleta)
 	SET @cod_prova = (SELECT cod FROM prova WHERE prova = @prova and sexo = @sexo)
 	SET @cod_bateria = (SELECT id FROM bateria WHERE nome = @bateria)
-	INSERT INTO desempenho VALUES
-		(@cod_prova,@cod_atleta,@cod_bateria, @cod_fase,@resultado)
-		
+	set @tipo = (select tipo from prova where cod = @cod_prova)
+	set @salto = ((select count(cod_atleta) from desempenho where cod_fase = @cod_fase and cod_atleta = @cod_atleta and cod_prova = @cod_prova)+1)
+	Begin try
+	if (@tipo = 1)
+	begin
+		if((select count(cod_atleta) from desempenho where cod_fase = @cod_fase and cod_atleta = @cod_atleta and cod_prova = @cod_prova) > 5)
+	begin
+			raiserror('Atleta já inserido', 16, 16)
+			return -1
+	end
+	else
+	begin
+		if (cast(@resultado as decimal(7, 2)) <= 1)
+		begin
+			set @resultado = 'FAULT'
+		end
+		INSERT INTO desempenho VALUES
+			(@cod_prova,@cod_atleta,@cod_bateria, @cod_fase,@salto,@resultado)
+	end
+	end
+	else
+	begin
+		if((select count(cod_atleta) from desempenho where cod_fase = @cod_fase and cod_atleta = @cod_atleta and cod_prova = @cod_prova) > 0)
+	begin
+			raiserror('Atleta já inserido', 16, 16)
+			return -1
+	end
+	else
+	begin
+		if ((@resultado = '') or (@resultado  = '00:00:00:000'))
+		begin
+			set @resultado = 'DNF'
+		end
+		INSERT INTO desempenho VALUES
+			(@cod_prova,@cod_atleta,@cod_bateria, @cod_fase,@salto,@resultado)
+	end
+	end
+	exec sp_verifrecordeC @resultado, @tipo, @cod_prova, @cod_atleta
+	end try
+	begin catch
+		raiserror('Erro já inserido', 16, 16)
+	end catch
+	
 -------------
 
 CREATE PROCEDURE sp_adiciona(@prova VARCHAR(50), @cod_atleta INT, @cod_fase INT,
