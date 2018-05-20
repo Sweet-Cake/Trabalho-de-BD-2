@@ -72,34 +72,74 @@ begin
 	if (@resultado > (select resultadoM from recorde where id_prova = 2 and tipoR = 2))
 	begin
 		update recorde
-		set resultadoM = @resultado where id_prova = 2 and tipoR = 2
+		set resultadoM = @resultado, 
+		where id_prova = 2 and tipoR = 2
 	end
 end
 
-declare @resultado datetime, @emaior int
-set @resultado= (select resultado from desempenho
-where cod_atleta = 3 and salto = 1 and cod_prova = 12 and cod_fase = 1) 
-set @emaior = dbo.fn_verRecordea(12, 3, 1, 1)
-	print @emaior
-if (@emaior != 0)
-begin
-	update recorde
-	set resultadoE = @resultado where id_prova = 12 and tipoR = 1
-	if (@emaior = 2)
+create alter procedure sp_verificaRecorde(@prova int, @atleta int, @salto int, @fase int,@tipo int)
+as
+	declare @emaior int
+	if (@tipo = 2)
 	begin
-		update recorde
-		set resultadoM = @resultado where id_prova = 12 and tipoR = 2
+		declare @resultadoC datetime
+		set @resultadoC = (select resultado from desempenho
+		where cod_atleta = @atleta and salto = @salto and cod_prova = @prova and cod_fase = @fase) 
+		set @emaior = dbo.fn_verRecordea(@prova, @atleta, @salto, @fase)
+			print @emaior
+		if (@emaior != 0)
+		begin
+			update recorde
+			set resultadoE = @resultadoC, 
+			pais = (select cod_pais from atleta where cod = @atleta)
+			where id_prova = @prova and tipoR = 1
+			if (@emaior = 2)
+			begin
+				select cod_pais from atleta where cod = @atleta
+				update recorde 
+				set resultadoM = @resultadoC,
+				pais = (select cod_pais from atleta where cod = @atleta) 
+				where id_prova = @prova and tipoR = 2
+			end
+		end
 	end
+	else
+	begin
+		declare @resultadoS decimal(7, 2)
+		set @resultadoS = (select resultado from desempenho
+		where cod_atleta = @atleta and salto = @salto and cod_prova = @prova and cod_fase = @fase) 
+		set @emaior = dbo.fn_verRecorde(@prova, @atleta, @salto, @fase)
+			print @emaior
+		if (@resultadoS > (select resultadoE from recorde where id_prova = @prova and tipoR = 1))
+		begin
+			update recorde
+			set resultadoE = @resultadoS,
+			pais = (select cod_pais from atleta where cod = @atleta) 			
+			where id_prova = @prova and tipoR = 1
+			if (@resultadoS > (select resultadoM from recorde where id_prova = @prova and tipoR = 2))
+			begin
+				update recorde
+				set resultadoM = @resultadoS, 
+				pais = (select cod_pais from atleta where cod = @atleta) 
+				where id_prova = @prova and tipoR = 2
+			end
+		end
+
 end
+
+exec sp_verificaRecorde 12, 3, 1, 1, 2
+exec sp_verificaRecorde 2, 1, 1, 1, 1
 
 -------
 select * from recorde
 
 update recorde
-set resultadoE = '12:12:12' where id_prova = 12 and tipoR = 1
+set resultadoE = '12:12:12', pais = 'AFG' 
+where id_prova = 12 and tipoR = 1
 update recorde
-set resultadoM = '12:12:12' where id_prova = 12 and tipoR = 2
+set resultadoM = '12:12:12', pais = 'AFG'  
+where id_prova = 12 and tipoR = 2
 update recorde
-set resultadoE = '25' where id_prova = 2 and tipoR = 1
+set resultadoE = '25', pais = 'AAA'  where id_prova = 2 and tipoR = 1
 update recorde
-set resultadoM = '80' where id_prova = 2 and tipoR = 2
+set resultadoM = '80', pais = 'AAA'  where id_prova = 2 and tipoR = 2
