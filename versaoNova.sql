@@ -91,7 +91,7 @@ BEGIN
 		IF (@tipo = 1)
 		BEGIN
 			INSERT INTO @tabelaProva(Codigo,Nome,Pais,Resultado)
-			SELECT top 30 atl.cod,atl.nome,ps.nome,d.resultado FROM desempenho d
+			SELECT distinct top 30 atl.cod,atl.nome,ps.nome,dbo.fn_convertemetro(d.resultado) FROM desempenho d
 			INNER JOIN prova p
 			ON d.cod_prova=p.cod
 			INNER JOIN fase f
@@ -110,7 +110,7 @@ BEGIN
 		ELSE
 		BEGIN
 			INSERT INTO @tabelaProva(Codigo,Nome,Pais,Resultado)
-			SELECT top 8 atl.cod,atl.nome,ps.nome,d.resultado FROM desempenho d
+			SELECT distinct top 8 atl.cod,atl.nome,ps.nome,dbo.fn_convertehora(d.resultado) FROM desempenho d
 			INNER JOIN prova p
 			ON d.cod_prova=p.cod
 			INNER JOIN fase f
