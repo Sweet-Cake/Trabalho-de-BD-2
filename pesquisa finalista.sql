@@ -40,7 +40,7 @@ begin
 	declare @valor datetime
 	if ((@resultado = 'DNF'))
 	begin
-		set @valor = '00:00:00:000'
+		set @valor = '23:59:59:999'
 	end
 	else
 	begin

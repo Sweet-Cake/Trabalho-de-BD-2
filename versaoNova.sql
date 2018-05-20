@@ -15,7 +15,8 @@ CREATE TABLE desempenho(
 	FOREIGN KEY (cod_bateria) REFERENCES bateria(id),
 	FOREIGN KEY (cod_fase) REFERENCES fase(id)
 )
-CREATE FUNCTION fn_tabelaDes (@prova VARCHAR(100), @bateria VARCHAR(20), @fase VARCHAR(20))
+
+CREATE alter FUNCTION fn_tabelaDes (@prova VARCHAR(100), @bateria VARCHAR(20), @fase VARCHAR(20))
 	RETURNS @tabelaDesempenho table (
 		Codigo INT,
 		Nome VARCHAR(100),
@@ -25,29 +26,54 @@ CREATE FUNCTION fn_tabelaDes (@prova VARCHAR(100), @bateria VARCHAR(20), @fase V
 BEGIN
 	DECLARE @codp INT,
 			@codb INT,
-			@codf INT
+			@codf INT,
+			@tipo INT
 		SET @codp = (SELECT cod FROM prova WHERE prova=@prova)
 		SET @codf =(SELECT id FROM fase WHERE nome=@fase)
 		SET @codb=(SELECT id FROM bateria WHERE nome=@bateria)
-
-		INSERT INTO @tabelaDesempenho(Codigo,Nome,Pais,Resultado)
-		SELECT atl.cod,atl.nome,ps.nome,d.resultado FROM desempenho d
-		INNER JOIN prova p
-		ON d.cod_prova=p.cod
-		INNER JOIN fase f
-		ON d.cod_fase=f.id
-		INNER JOIN bateria b
-		ON d.cod_bateria=b.id
-		INNER JOIN atleta atl
-		ON d.cod_atleta=atl.cod
-		INNER JOIN pais ps
-		ON atl.cod_pais=ps.cod
-		WHERE
-		p.cod=@codp AND f.id=@codf AND b.id=@codb 
-	RETURN
+		SET @tipo = (SELECT tipo FROM prova WHERE prova=@prova)
+		IF (@tipo = 1)
+		BEGIN
+			INSERT INTO @tabelaDesempenho(Codigo,Nome,Pais,Resultado)
+			SELECT top 30 atl.cod,atl.nome,ps.nome,d.resultado FROM desempenho d
+			INNER JOIN prova p
+			ON d.cod_prova=p.cod
+			INNER JOIN fase f
+			ON d.cod_fase=f.id
+			INNER JOIN bateria b
+			ON d.cod_bateria=b.id
+			INNER JOIN atleta atl
+			ON d.cod_atleta=atl.cod
+			INNER JOIN pais ps
+			ON atl.cod_pais=ps.cod
+			WHERE
+			p.cod=@codp AND f.id=@codf AND b.id=@codb 
+			ORDER BY dbo.fn_convertemetro(d.resultado) DESC
+		END
+		ELSE
+		BEGIN
+			INSERT INTO @tabelaDesempenho(Codigo,Nome,Pais,Resultado)
+			SELECT top 10 atl.cod,atl.nome,ps.nome,d.resultado FROM desempenho d
+			INNER JOIN prova p
+			ON d.cod_prova=p.cod
+			INNER JOIN fase f
+			ON d.cod_fase=f.id
+			INNER JOIN bateria b
+			ON d.cod_bateria=b.id
+			INNER JOIN atleta atl
+			ON d.cod_atleta=atl.cod
+			INNER JOIN pais ps
+			ON atl.cod_pais=ps.cod
+			WHERE
+			p.cod=@codp AND f.id=@codf AND b.id=@codb 
+			ORDER BY dbo.fn_convertehora(d.resultado) ASC
+		END
+	RETURN 
 END
 
-CREATE FUNCTION fn_tabelaProva (@fase VARCHAR(20),@prova VARCHAR(100))
+
+
+CREATE alter FUNCTION fn_tabelaProva (@fase VARCHAR(20),@prova VARCHAR(100))
 	RETURNS @tabelaProva table (
 		Codigo INT,
 		Nome VARCHAR(100),
@@ -57,24 +83,48 @@ CREATE FUNCTION fn_tabelaProva (@fase VARCHAR(20),@prova VARCHAR(100))
 BEGIN
 	DECLARE @codp INT,
 			@codb INT,
-			@codf INT
+			@codf INT,
+			@tipo INT
 		SET @codp = (SELECT cod FROM prova WHERE prova=@prova)
 		SET @codf =(SELECT id FROM fase WHERE nome=@fase)
-
-		INSERT INTO @tabelaProva(Codigo,Nome,Pais,Resultado)
-		SELECT atl.cod,atl.nome,ps.nome,d.resultado FROM desempenho d
-		INNER JOIN prova p
-		ON d.cod_prova=p.cod
-		INNER JOIN fase f
-		ON d.cod_fase=f.id
-		INNER JOIN bateria b
-		ON d.cod_bateria=b.id
-		INNER JOIN atleta atl
-		ON d.cod_atleta=atl.cod
-		INNER JOIN pais ps
-		ON atl.cod_pais=ps.cod
-		WHERE
-		p.cod=@codp AND f.id=@codf
+		SET @tipo = (SELECT tipo FROM prova WHERE prova=@prova)
+		IF (@tipo = 1)
+		BEGIN
+			INSERT INTO @tabelaProva(Codigo,Nome,Pais,Resultado)
+			SELECT top 8 atl.cod,atl.nome,ps.nome,d.resultado FROM desempenho d
+			INNER JOIN prova p
+			ON d.cod_prova=p.cod
+			INNER JOIN fase f
+			ON d.cod_fase=f.id
+			INNER JOIN bateria b
+			ON d.cod_bateria=b.id
+			INNER JOIN atleta atl
+			ON d.cod_atleta=atl.cod
+			INNER JOIN pais ps
+			ON atl.cod_pais=ps.cod
+			WHERE
+			p.cod=@codp AND f.id=@codf
+			AND d.resultado = dbo.fn_maiorvalor(@codp, atl.cod)
+			ORDER BY dbo.fn_convertemetro(d.resultado) DESC
+		END
+		ELSE
+		BEGIN
+			INSERT INTO @tabelaProva(Codigo,Nome,Pais,Resultado)
+			SELECT top 8 atl.cod,atl.nome,ps.nome,d.resultado FROM desempenho d
+			INNER JOIN prova p
+			ON d.cod_prova=p.cod
+			INNER JOIN fase f
+			ON d.cod_fase=f.id
+			INNER JOIN bateria b
+			ON d.cod_bateria=b.id
+			INNER JOIN atleta atl
+			ON d.cod_atleta=atl.cod
+			INNER JOIN pais ps
+			ON atl.cod_pais=ps.cod
+			WHERE
+			p.cod=@codp AND f.id=@codf
+			ORDER BY dbo.fn_convertehora(d.resultado) ASC
+		END
 	RETURN
 END
 
