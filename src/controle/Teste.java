@@ -92,6 +92,19 @@ public class Teste extends HttpServlet {
 			sair = response.getWriter();
 		    sair.print(msg);
 		    break;
+		case "recorde":
+			try {
+				String prova = request.getParameter("prova");
+				System.out.println(prova);
+				msg = lista.RecebeRecorde(prova, 1);
+				System.out.println(msg);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			sair = response.getWriter();
+		    sair.print(msg);
+		    break;
 		}
 		
 	}

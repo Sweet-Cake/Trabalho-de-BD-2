@@ -12,10 +12,10 @@ import model.Desempenho;
 public class Insert {
 	 Connection con = (Connection) GenericDao.getInstance().getConnection();
 	
-	public void inserir(int fase, int atleta, int prova, String bateria, String desempenho) throws SQLException{
+	public void inserir(int fase, int atleta, String prova, String bateria, String desempenho) throws SQLException{
 		Connection con = (Connection) GenericDao.getInstance().getConnection();
 		PreparedStatement ps = (PreparedStatement) con.prepareStatement("exec sp_adiciona ?,?,?,?,?");
-		ps.setInt(1,prova);
+		ps.setString(1,prova);
 		ps.setInt(2, atleta);
 		ps.setInt(3, fase);
 		ps.setString(4,bateria);
@@ -31,6 +31,10 @@ public class Insert {
 		ps.setString(3,fase);
 		ResultSet rs=ps.executeQuery();
 		List<Desempenho> des = new ArrayList<Desempenho>();
+		int x = 1;
+		Lista lista = new Lista();
+		String re = lista.RecebeRecorde(prova, 1);
+		String rm = lista.RecebeRecorde(prova, 2);
 		while(rs.next()) {
 			Desempenho d = null;
 			d=new Desempenho();
@@ -38,6 +42,15 @@ public class Insert {
 			d.setNome(rs.getString("Nome"));
 			d.setPais(rs.getString("Pais"));
 			d.setResultado(rs.getString("Resultado"));
+			if (x == 1){
+				if (d.getResultado().equals(re)){
+					System.out.println("azul");}
+				else if (d.getResultado().equals(re)){
+					System.out.println("verde");}
+				else
+					System.out.println("normal");
+			}
+			x++;
 			System.out.println("passei");
 			des.add(d);
 		}

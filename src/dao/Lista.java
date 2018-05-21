@@ -80,6 +80,20 @@ public class Lista {
 		return msg;
 	}
 	
+	public String RecebeRecorde(String prova, int tipo) throws SQLException {
+		Connection con = (Connection) GenericDao.getInstance().getConnection();
+		PreparedStatement pstmt = (PreparedStatement) con.prepareStatement("exec sp_pegarecorde ?, ?");
+		pstmt.setString(1,prova);
+		pstmt.setInt(2, tipo);
+		ResultSet rs = pstmt.executeQuery();
+		String msg = "";
+		while(rs.next()) { 
+			Prova p = new Prova();
+			msg = rs.getString("resultado");
+		}
+		return msg;
+	}
+	
 	/*public List<Prova> ListaFinalista() throws SQLException {
 		Connection con = (Connection) GenericDao.getInstance().getConnection();
 		PreparedStatement pstmt = (PreparedStatement) con.prepareStatement("select * FROM dbo.fn_pesquisaFinal() as tabela");
