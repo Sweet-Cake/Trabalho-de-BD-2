@@ -265,7 +265,8 @@ begin
 end
 
 
- CREATE PROCEDURE sp_adiciona(@prova VARCHAR(50), @cod_atleta INT, @cod_fase INT,
+ CREATE 
+ALTER PROCEDURE sp_adiciona(@prova VARCHAR(50), @cod_atleta INT, @cod_fase INT,
 							 @bateria VARCHAR(50), @resultado VARCHAR(50))
 AS
 	DECLARE @cod_prova INT, @cod_bateria INT
@@ -284,6 +285,13 @@ AS
 	Begin try
 	if (@tipo = 1)
 	begin
+		if ((select count(cod_atleta) from desempenho where cod_fase = @cod_fase and cod_atleta = @cod_atleta and cod_prova = @cod_prova) > 0 and
+		(select top 1 cod_bateria from desempenho where cod_atleta = @cod_atleta and cod_fase = @cod_fase and cod_prova = @cod_prova) != @cod_bateria
+		)
+		begin
+			raiserror('Atleta inserido em outra bateria', 16, 16)
+			return -1
+		end
 		if((select count(cod_atleta) from desempenho where cod_fase = @cod_fase and cod_atleta = @cod_atleta and cod_prova = @cod_prova) > 5)
 	begin
 			raiserror('Atleta já inserido', 16, 16)
@@ -306,6 +314,7 @@ AS
 			raiserror('Atleta já inserido', 16, 16)
 			return -1
 	end
+		
 	else
 	begin
 		if ((@resultado = '') or (@resultado  = '00:00:00:000'))
