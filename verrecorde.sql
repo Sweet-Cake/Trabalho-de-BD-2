@@ -191,3 +191,60 @@ update recorde
 set resultadoE = '25', pais = 'AAA'  where id_prova = 2 and tipoR = 1
 update recorde
 set resultadoM = '80', pais = 'AAA'  where id_prova = 2 and tipoR = 2
+
+
+
+------
+
+ALTER procedure [dbo].[sp_verifrecordeC](@resultado varchar(50), @tipo int, @prova int, @atleta int)
+as
+	if (@tipo = 1)
+	begin
+		declare @resultadoS decimal (7,2)
+		set @resultadoS = dbo.fn_convertemetro(@resultado)
+		if (@resultadoS > (select resultadoE from recorde where id_prova = @prova and tipoR = 1))
+		begin
+			update recorde
+			set resultadoE = @resultadoS,
+			pais = (select cod_pais from atleta where cod = @atleta),
+			nome_atleta = (select nome from atleta where cod = @atleta) 			
+			where id_prova = @prova and tipoR = 1
+			if (@resultadoS > (select resultadoM from recorde where id_prova = @prova and tipoR = 2))
+			begin
+				print @resultado
+				update recorde
+				set resultadoM = @resultadoS, 
+				pais = (select cod_pais from atleta where cod = @atleta),
+				nome_atleta = (select nome from atleta where cod = @atleta) 
+				where id_prova = @prova and tipoR = 2
+			end
+		end
+	end
+	else
+	begin
+		declare @resultadoC time, @recordeAtual time
+		print 'dokidoki'
+		set @resultadoC = dbo.fn_convertehora(@resultado)
+		set @recordeAtual = (select resultadoE from recorde where id_prova = @prova and tipoR = 1)
+		print @recordeAtual
+		if (@resultadoC < (select resultadoE from recorde where id_prova = @prova and tipoR = 1))
+		begin
+			print 'pukyun'
+			update recorde
+			set resultadoE = @resultadoC, 
+			pais = (select cod_pais from atleta where cod = @atleta),
+			nome_atleta = (select nome from atleta where cod = @atleta) 
+			where id_prova = @prova and tipoR = 1
+			declare @a time set @a = (select resultadoM from recorde where id_prova = @prova and tipoR = 2)
+			print @a print @resultadoC
+			if (@resultadoC < (select resultadoM from recorde where id_prova = @prova and tipoR = 2))
+			begin
+				print 'mugen'
+				update recorde 
+				set resultadoM = @resultadoC,
+				pais = (select cod_pais from atleta where cod = @atleta),
+				nome_atleta = (select nome from atleta where cod = @atleta) 
+				where id_prova = @prova and tipoR = 2
+			end
+		end
+	end
