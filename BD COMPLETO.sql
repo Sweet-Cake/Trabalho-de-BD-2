@@ -253,7 +253,7 @@ as
 	end
 
 ------adiciona notas
-ALTER function [dbo].[fn_qtacountprova](@tipo int, @cod int)
+ALTER function fn_qtacountprova(@tipo int, @cod int)
 returns int
 as
 begin
