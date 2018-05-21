@@ -96,7 +96,7 @@ INSERT INTO pais VALUES
 ('ANT', 'Antiga e Barbuda'),
 ('ASA', 'Samoa Americana'),
 ('ARG', 'Argentina'),
-('Arm', 'Armenia'),
+('ARM', 'Armenia'),
 ('ARU', 'Aruba'),
 ('AUS', 'Australia'),
 ('AUT', 'Austria'),
@@ -143,7 +143,20 @@ INSERT INTO atleta VALUES
 ('ALG', 'Tanja Emilija', 'F'),
 ('ALG', 'Eudocia Erlendr', 'M'),
 ('AND', 'Bradley Jodocus', 'M'),
-('AND', 'Bozhidara Katrina', 'M')
+('AND', 'Bozhidara Katrina', 'M'),
+('AND', 'Takane Shijou', 'F'),
+('ANG', 'Tenshi Momo', 'F'),
+('ANG', 'Amir Singh', 'M'),
+('ANT', 'Anthy Himemiya', 'F'),
+('ANT', 'Stella Sunnistar', 'F'),
+('ASA', 'Rod Scott', 'M'),
+('ARG', 'Elena Shimamura', 'F'),
+('ARM', 'Allen Gill', 'M'),
+('ARU', 'Haley Burke', 'M'),
+('AUS', 'Rowan Watts', 'M'),
+('AUT', 'Nana Abe', 'F'),
+('AZE', 'Rosetta Benheur', 'F')
+
 
 
 INSERT INTO bateria VALUES
@@ -156,12 +169,16 @@ INSERT INTO bateria VALUES
 
 
 -------------
-
-CREATE alter PROCEDURE sp_adiciona(@prova VARCHAR(50), @cod_atleta INT, @cod_fase INT,
+ALTER PROCEDURE [dbo].[sp_adiciona](@prova VARCHAR(50), @cod_atleta INT, @cod_fase INT,
 							 @bateria VARCHAR(50), @resultado VARCHAR(50))
 AS
 	DECLARE @cod_prova INT, @cod_bateria INT
 	DECLARE @sexo VARCHAR(1), @tipo int
+	DECLARE
+	@ErrorMessage   varchar(2000),
+	@ErrorSeverity  tinyint,
+	@ErrorState     tinyint
+
 	declare @salto int
 	SET @sexo = (SELECT sexo FROM atleta where cod = @cod_atleta)
 	SET @cod_prova = (SELECT cod FROM prova WHERE prova = @prova and sexo = @sexo)
@@ -203,10 +220,14 @@ AS
 			(@cod_prova,@cod_atleta,@cod_bateria, @cod_fase,@salto,@resultado)
 	end
 	end
+	print 'hibiki'
 	exec sp_verifrecordeC @resultado, @tipo, @cod_prova, @cod_atleta
 	end try
 	begin catch
-		raiserror('Erro já inserido', 16, 16)
+		SET @ErrorMessage  = ERROR_MESSAGE()
+		SET @ErrorSeverity = ERROR_SEVERITY()
+		SET @ErrorState    = ERROR_STATE()
+		RAISERROR(@ErrorMessage, @ErrorSeverity, @ErrorState)
 	end catch
 	
 -------------

@@ -110,7 +110,7 @@ BEGIN
 		ELSE
 		BEGIN
 			INSERT INTO @tabelaProva(Codigo,Nome,Pais,Resultado)
-			SELECT distinct top 8 atl.cod,atl.nome,ps.nome,dbo.fn_convertehora(d.resultado) FROM desempenho d
+			SELECT top 8 atl.cod,atl.nome,ps.nome,dbo.fn_convertehora(d.resultado) FROM desempenho d
 			INNER JOIN prova p
 			ON d.cod_prova=p.cod
 			INNER JOIN fase f
@@ -127,6 +127,7 @@ BEGIN
 		END
 	RETURN
 END
+
 
 
 select * FROM dbo.fn_tabelaDes('Lançamento de Dado / Javelin Throw','1ºCiclo','FINAL') as tabela
