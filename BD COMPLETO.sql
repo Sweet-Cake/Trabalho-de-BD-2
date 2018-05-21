@@ -100,23 +100,23 @@ INSERT INTO pais VALUES
 ('BRA', 'Brasil')
 
 INSERT INTO prova VALUES
-('Lançamento de Dado / Javelin Throw', 'F', 1),
-('Salto em Distancia / Long Jump', 'M', 1),
-('Salto com Vara / Pole Vault', 'M', 1),
-('Salto com Vara / Pole Vault', 'M', 1),
-('Arremesso de Peso / Shot Put', 'F', 1),
-('Lançamento do Disco / Discus Throw', 'M', 1),
-('Salto Triplo ', 'F', 1),
-('400m com Barreiras / 400m Hurdles', 'M', 2),
-('100m / 100m', 'F', 2),
-('100m / 100m', 'M', 2),
-('3000m / 3000m', 'M', 2),
-('3000m com obstaculo / 3000m Steeplechase', 'F', 2),
-('400m / 400m', 'M', 2),
-('800m / 800m', 'F', 2),
-('800m / 800m', 'M', 2),
-('200m / 200m', 'F', 2),
-('200m / 200m', 'M', 2)
+('Lancamento de Dado / Javelin Throw (F)', 'F', 1),
+('Salto em Distancia / Long Jump (M)', 'M', 1),
+('Salto com Vara / Pole Vault (M)', 'M', 1),
+('Arremesso de Peso / Shot Put (F)', 'F', 1),
+('Lancamento do Disco / Discus Throw (M)', 'M', 1),
+('Salto Triplo (F)', 'F', 1),
+('400m com Barreiras / 400m Hurdles (M)', 'M', 2),
+('100m / 100m (F)', 'F', 2),
+('100m / 100m (M)', 'M', 2),
+('3000m / 3000m (M)', 'M', 2),
+('3000m com obstaculo / 3000m Steeplechase (F)', 'F', 2),
+('400m / 400m (M)', 'M', 2),
+('800m / 800m (F)', 'F', 2),
+('800m / 800m (M)', 'M', 2),
+('200m / 200m (F)', 'F', 2),
+('200m / 200m (M)', 'M', 2)
+
 select * from atleta
 INSERT INTO atleta VALUES
 ('AFG', 'Skender Halil', 'M'),
